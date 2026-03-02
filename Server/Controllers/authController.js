@@ -135,7 +135,7 @@ export const resetPassword = async (req, res) => {
 
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decoded);
+            // console.log(decoded);
             
         }
         catch (error) {

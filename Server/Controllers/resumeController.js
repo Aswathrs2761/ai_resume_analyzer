@@ -78,8 +78,8 @@ export const uploadResume = async (req, res) => {
 
     try {
       analysis = JSON.parse(aiResult);
-      console.log("AI ANALYSIS OBJECT:", analysis);
-console.log("ATS SCORE VALUE:", analysis.score);
+      // console.log("AI ANALYSIS OBJECT:", analysis);
+// console.log("ATS SCORE VALUE:", analysis.score);
     } catch (e) {
       console.error("AI returned invalid JSON:", aiResult);
       return res.status(500).json({
@@ -101,7 +101,7 @@ console.log("ATS SCORE VALUE:", analysis.score);
       suggestions: analysis.suggestions,
       summary: analysis.summary
     });
-    console.log(savedResume);
+    // console.log(savedResume);
     
     return res.status(200).json(savedResume);
     
