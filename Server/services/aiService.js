@@ -11,58 +11,164 @@ export default async function analyzeResume(text) {
     messages: [
       {
         role: "user",
-        content: `
-You are an advanced ATS (Applicant Tracking System) resume evaluator used by recruiters and hiring managers.
+        content: `You are an advanced ATS (Applicant Tracking System) resume analyzer used by recruiters and hiring managers.
 
-STRICT RULES:
-- Return ONLY valid JSON.
-- No markdown.
-- No explanations.
-- No extra text.
-- Follow structure EXACTLY.
+STRICT OUTPUT RULES:
 
-You must evaluate the resume using ATS scoring logic based on the provided Job Description.
+* Return ONLY valid JSON.
+* Do NOT include markdown.
+* Do NOT include explanations.
+* Do NOT include headings.
+* Do NOT include extra text.
+* Follow the JSON structure EXACTLY.
 
-SCORING CRITERIA (Total = 100):
+Your task is to evaluate the resume using ATS standards used by modern recruiting systems.
 
-1. Keyword Match (40 points)
-- Compare resume skills, tools, and technologies with job description keywords.
+---
 
-2. Experience Relevance (20 points)
-- Role alignment
-- Years of experience
-- Domain relevance
+ATS SCORING CRITERIA (TOTAL = 100)
 
-3. Impact & Achievements (15 points)
-- Quantified results (%, revenue, performance improvements)
-- Action verbs
+1. Skills Strength — 30 points
+   Evaluate the strength and relevance of technical skills in the resume.
 
-4. Resume Structure (15 points)
-- Professional summary quality
-- Bullet clarity
-- Section organization
+Higher score if the resume clearly lists:
 
-5. Completeness (10 points)
-- Projects, certifications, education, skills sections
+* Programming languages
+* Frameworks
+* Tools
+* Databases
+* Cloud technologies
+* DevOps tools
 
-ANALYSIS REQUIREMENTS:
-- Extract skills ONLY from resume.
-- Missing skills MUST come from job description comparison.
-- Analyze professional summary separately.
-- Suggestions must be actionable and ATS-focused.
-- Suggestions must be specific improvements, not generic advice.
+Skills should be clearly listed in a dedicated skills section or naturally within experience/projects.
 
-Return EXACT structure:
+2. Experience Quality — 25 points
+   Evaluate the quality of work experience or projects.
+
+Consider:
+
+* Real-world project complexity
+* Technology usage
+* Problem solving
+* Relevance of work
+
+3. Impact & Achievements — 20 points
+   Check whether the resume contains measurable achievements such as:
+
+* Percent improvements
+* Performance gains
+* User growth
+* Revenue impact
+* Metrics or numbers
+
+Higher score for quantified achievements and strong action verbs.
+
+4. Resume Structure — 15 points
+   Evaluate whether the resume is ATS friendly.
+
+Check for:
+
+* Clear section headings
+* Bullet points instead of long paragraphs
+* Professional summary
+* Logical organization
+* Clean formatting
+
+5. Completeness — 10 points
+   Check whether the resume contains key sections:
+
+* Skills
+* Projects or Experience
+* Education
+* Certifications (optional)
+
+---
+
+SKILL EXTRACTION RULES
+
+Extract technical skills ONLY from the resume.
+
+Skills may include:
+
+* Programming languages
+* Frameworks
+* Libraries
+* Tools
+* Databases
+* Cloud platforms
+* DevOps tools
+
+Do NOT invent skills.
+
+Normalize skill names where possible.
+
+Examples:
+ReactJS → React
+NodeJS → Node.js
+NextJS → Next.js
+
+---
+
+MISSING SKILLS RULES
+
+Since no Job Description is provided, identify commonly expected industry skills that are missing for a strong technical resume.
+
+Focus on widely used technologies such as:
+
+* Cloud platforms (AWS, Azure, GCP)
+* DevOps tools (Docker, Kubernetes)
+* Databases
+* Testing frameworks
+* Version control tools
+* CI/CD tools
+
+Only include skills that would realistically strengthen the resume.
+
+Limit missingSkills to the most impactful improvements.
+
+---
+
+SUGGESTION RULES
+
+Suggestions must be specific and actionable.
+
+Suggestions should focus on:
+
+* Adding measurable achievements
+* Improving ATS keyword density
+* Adding missing industry-standard tools or technologies
+* Improving professional summary
+* Strengthening project descriptions
+
+Avoid generic advice.
+
+Each suggestion should clearly improve the ATS score.
+
+---
+
+SUMMARY RULES
+
+Write a short recruiter-style evaluation (2–3 sentences).
+
+Include:
+
+* Overall ATS score evaluation
+* Key strengths of the resume
+* Main improvements needed
+
+---
+
+OUTPUT STRUCTURE (STRICT)
 
 {
-  "Atsscore": number,
-  "skills": string[],
-  "missingSkills": string[],
-  "suggestions": string[],
-  "summary": string
+"Atsscore": number,
+"skills": string[],
+"missingSkills": string[],
+"suggestions": string[],
+"summary": string
 }
 
-
+---
 
 RESUME:
 ${text}
