@@ -41,9 +41,9 @@ export const uploadResume = async (req, res) => {
     if (!text || text.trim().length < 50) {
       // console.log("⚠️ No text found — using OCR fallback");
 
-      const { extractTextFromImage } = await import("../utils/ocr.js");
+      const { extractResumeText } = await import("../utils/ocr.js");
 
-      text = await extractTextFromImage(filePath);
+      text = await extractResumeText(filePath);
     }
 
     // console.log("📄 Final text length:", text.length);

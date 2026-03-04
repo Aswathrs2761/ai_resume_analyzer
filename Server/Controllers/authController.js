@@ -52,9 +52,7 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({
-      email: email.toLowerCase()
-    });
+    const user = await User.findOne({ email: email.toLowerCase()});
 
     if (!user) {
       return res.status(400).json({ message: "Invalid email" });

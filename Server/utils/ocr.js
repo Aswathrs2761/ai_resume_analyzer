@@ -1,28 +1,50 @@
-import Tesseract from "tesseract.js";
-import pdf from "pdf-poppler";
-import path from "path";
 import fs from "fs";
+import path from "path";
+import pdf from "pdf-parse";
+import Tesseract from "tesseract.js";
+import { fromPath } from "pdf2pic";
 
-export async function extractTextFromImage(pdfPath) {
-  const outputDir = path.dirname(pdfPath);
+export async function extractResumeText(pdfPath) {
+  try {
 
-  const opts = {
-    format: "png",
-    out_dir: outputDir,
-    out_prefix: "page",
-    page: 1
-  };
+    // 1️⃣ Try normal PDF text extraction
+    const buffer = fs.readFileSync(pdfPath);
+    const pdfData = await pdf(buffer);
 
-  // ✅ Convert PDF → PNG
-  await pdf.convert(pdfPath, opts);
+    const text = pdfData.text.trim();
 
-  const imagePath = path.join(outputDir, "page-1.png");
+    // If text exists → return immediately
+    if (text.length > 100) {
+      return text;
+    }
 
-  // ✅ OCR image
-  const result = await Tesseract.recognize(imagePath, "eng");
+    console.log("⚠️ No text found in PDF, running OCR...");
 
-  // cleanup image
-  fs.unlink(imagePath, () => {});
+    // 2️⃣ Convert first page PDF → image
+    const options = {
+      density: 300,
+      saveFilename: "page",
+      savePath: path.dirname(pdfPath),
+      format: "png",
+      width: 1200,
+      height: 1200
+    };
 
-  return result.data.text;
+    const convert = fromPath(pdfPath, options);
+    const page = await convert(1);
+
+    const imagePath = page.path;
+
+    // 3️⃣ Run OCR
+    const result = await Tesseract.recognize(imagePath, "eng");
+
+    // cleanup
+    fs.unlink(imagePath, () => {});
+
+    return result.data.text;
+
+  } catch (error) {
+    console.error("Text extraction error:", error);
+    throw error;
+  }
 }
