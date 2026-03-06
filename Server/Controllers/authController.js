@@ -102,7 +102,7 @@ export const forgotPassword = async (req, res) => {
         await sendmail(email, "You are receiving this email because a request was made to reset the password for your account.", `
             Please click the link below to reset your password:
             
-            https://airesumeanalyzerfrontend.vercel.app/ResetPassword/${user._id}/${resetToken}
+            https://airesumeanalyzervercel.vercel.app//ResetPassword/${user._id}/${resetToken}
 
             
             IF you did not request a password reset, please ignore this email and your password will remain unchanged.
